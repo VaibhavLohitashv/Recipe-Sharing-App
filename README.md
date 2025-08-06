@@ -1,3 +1,5 @@
+RECIPE APP: COMPLETELY CREATED USING AI IN CURSOR IDE.
+
 Install node modules in both client and server using npm install.
 Write command in client : npm start
 Write command in server : npm run dev
