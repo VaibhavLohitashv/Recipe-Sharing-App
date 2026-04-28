@@ -2,7 +2,10 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import User from '../models/User.js';
 
-const JWT_SECRET = process.env.JWT_SECRET || '21fg10kl';
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error('JWT_SECRET environment variable is required');
+}
 
 export const generateToken = (user) => {
   return jwt.sign(
@@ -29,4 +32,4 @@ export const getUser = async (token) => {
   } catch (error) {
     return null;
   }
-}; 
+};
