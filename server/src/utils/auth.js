@@ -1,8 +1,16 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import User from '../models/User.js';
+import crypto from 'crypto';
 
-const JWT_SECRET = process.env.JWT_SECRET || '21fg10kl';
+// SECURITY: Ensure JWT secret is securely generated and required
+const JWT_SECRET = (() => {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error('JWT_SECRET environment variable is not set');
+  }
+  return secret;
+})();
 
 export const generateToken = (user) => {
   return jwt.sign(
@@ -24,9 +32,21 @@ export const getUser = async (token) => {
   if (!token) return null;
   
   try {
+    // SECURITY: Strict token format validation
+    if (!/^Bearer\s[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/.test(token)) {
+      throw new Error('Invalid token format');
+    }
+
     const decoded = jwt.verify(token.replace('Bearer ', ''), JWT_SECRET);
+    
+    // SECURITY: Additional payload validation
+    if (!decoded.id || !decoded.email) {
+      throw new Error('Invalid token payload');
+    }
+
     return await User.findById(decoded.id);
   } catch (error) {
+    console.warn('Token verification failed:', error.message);
     return null;
   }
-}; 
+};
