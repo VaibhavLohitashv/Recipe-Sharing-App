@@ -1,7 +1,6 @@
-import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
+import { ApolloClient, InMemoryCache, createHttpLink, from } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
-import { from } from '@apollo/client';
 
 const httpLink = createHttpLink({
   uri: 'http://localhost:4000/graphql',
@@ -50,4 +49,4 @@ const client = new ApolloClient({
   connectToDevTools: true
 });
 
-export default client; 
+export default client;
